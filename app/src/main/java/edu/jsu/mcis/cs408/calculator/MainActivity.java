@@ -15,6 +15,9 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.nio.charset.StandardCharsets;
+import java.util.Objects;
+
 import edu.jsu.mcis.cs408.calculator.databinding.ActivityMainBinding;
 
 public class MainActivity extends AppCompatActivity {
@@ -47,39 +50,46 @@ public class MainActivity extends AppCompatActivity {
         tv.setText(R.string.textplaceholder);
         tv.setTextSize(48);
 
-        set.connect(tv.getId(),ConstraintSet.RIGHT, binding.guideEast.getId(), ConstraintSet.RIGHT,0);
-        set.connect(tv.getId(), ConstraintSet.LEFT,ConstraintSet.PARENT_ID, ConstraintSet.LEFT,0);
-        set.connect(tv.getId(),ConstraintSet.TOP, ConstraintSet.PARENT_ID, ConstraintSet.TOP,0);
+        set.connect(tv.getId(), ConstraintSet.RIGHT, binding.guideEast.getId(), ConstraintSet.RIGHT, 0);
+        set.connect(tv.getId(), ConstraintSet.LEFT, ConstraintSet.PARENT_ID, ConstraintSet.LEFT, 0);
+        set.connect(tv.getId(), ConstraintSet.TOP, ConstraintSet.PARENT_ID, ConstraintSet.TOP, 0);
         tv.setGravity(Gravity.END);
         layout.addView(tv);
 
+        //Button button;
+        LayoutParams buttondis;
         for (int i = 0; i < buttons.length; i++) {
             int id = View.generateViewId(); // generate new ID
-            Button button = new Button(this);// create new TextView
+            Button button = new Button(this);
             button.setId(id);  // assign ID
             button.setTag(btnTagArray[i]); // assign tag (for acquiring references later)
             button.setText(btnTextArray[i]); // set text (using a string resource)
             button.setTextSize(24); // set size
             layout.addView(button); // add to layout
             buttons[i] = id; // store ID to collection
+
+            buttondis = button.getLayoutParams();
+            buttondis.width = ConstraintLayout.LayoutParams.WRAP_CONTENT;
+            buttondis.width = ConstraintLayout.LayoutParams.WRAP_CONTENT;
+
+
         }
-        for (int id: buttons){
-            set.connect(id, ConstraintSet.LEFT, binding.guideWest.getId(), ConstraintSet.LEFT,0);
-            set.connect(id, ConstraintSet.RIGHT, binding.guideEast.getId(), ConstraintSet.RIGHT,0);
+        for (int id : buttons) {
+            set.connect(id, ConstraintSet.LEFT, binding.guideWest.getId(), ConstraintSet.LEFT, 0);
+            set.connect(id, ConstraintSet.RIGHT, binding.guideEast.getId(), ConstraintSet.RIGHT, 0);
             set.connect(id, ConstraintSet.BOTTOM, binding.guideSouth.getId(), ConstraintSet.BOTTOM);
             set.connect(id, ConstraintSet.TOP, tv.getId(), ConstraintSet.BOTTOM);
 
         }
         for (int row = 0; row < KEYS_HEIGHT; ++row) {
             set.createHorizontalChain(binding.guideWest.getId(), ConstraintSet.LEFT, binding.guideEast.getId(), ConstraintSet.RIGHT, horizontals[row], null, ConstraintSet.CHAIN_PACKED);
+            for (int col = 0; col < KEYS_WIDTH; ++col) {
+                set.createVerticalChain(tv.getId(), ConstraintSet.BOTTOM, binding.guideSouth.getId(), ConstraintSet.BOTTOM, verticals[col], null, ConstraintSet.CHAIN_PACKED);
+            }
         }
-
-        for (int col = 0; col < KEYS_WIDTH; ++col) {
-            set.createVerticalChain(tv.getId(), ConstraintSet.BOTTOM, binding.guideSouth.getId(), ConstraintSet.BOTTOM, verticals[col], null, ConstraintSet.CHAIN_PACKED);
-        }
-        for (int j=0; j<BUTTON_GRID;++j){
-            set.createVerticalChain(tv.getId(),ConstraintSet.BOTTOM,
-                    binding.guideSouth.getId(),ConstraintSet.BOTTOM, buttons,
+        for (int j = 0; j < BUTTON_GRID; ++j) {
+            set.createVerticalChain(tv.getId(), ConstraintSet.BOTTOM,
+                    binding.guideSouth.getId(), ConstraintSet.BOTTOM, buttons,
                     null, ConstraintSet.CHAIN_PACKED);
         }
 
@@ -89,6 +99,8 @@ public class MainActivity extends AppCompatActivity {
         params.width = ConstraintLayout.LayoutParams.MATCH_CONSTRAINT;
         params.height = LayoutParams.WRAP_CONTENT;
         tv.setLayoutParams(params);
+
+
 
     }
 }
