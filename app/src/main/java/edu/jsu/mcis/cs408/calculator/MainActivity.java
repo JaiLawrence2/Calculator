@@ -47,17 +47,16 @@ public class MainActivity extends AppCompatActivity {
         ConstraintSet set = new ConstraintSet();
         TextView tv = new TextView(this);
         tv.setId(View.generateViewId());
+        tv.setTag("TextView");
         tv.setText(R.string.textplaceholder);
+        tv.setGravity(Gravity.END);
         tv.setTextSize(48);
-
+        layout.addView(tv);
+        set.clone(layout);
         set.connect(tv.getId(), ConstraintSet.RIGHT, binding.guideEast.getId(), ConstraintSet.RIGHT, 0);
         set.connect(tv.getId(), ConstraintSet.LEFT, ConstraintSet.PARENT_ID, ConstraintSet.LEFT, 0);
         set.connect(tv.getId(), ConstraintSet.TOP, ConstraintSet.PARENT_ID, ConstraintSet.TOP, 0);
-        tv.setGravity(Gravity.END);
-        layout.addView(tv);
 
-        //Button button;
-        LayoutParams buttondis;
         for (int i = 0; i < buttons.length; i++) {
 
             int id = View.generateViewId(); // generate new ID
@@ -71,7 +70,7 @@ public class MainActivity extends AppCompatActivity {
             buttons[i] = id; // store ID to collection
 
         }
-        set.clone(layout);
+
 
         for (int id : buttons) {
             set.connect(id, ConstraintSet.LEFT, binding.guideWest.getId(), ConstraintSet.LEFT, 8);
@@ -79,11 +78,11 @@ public class MainActivity extends AppCompatActivity {
             set.connect(id, ConstraintSet.BOTTOM, binding.guideSouth.getId(), ConstraintSet.BOTTOM);
             set.connect(id, ConstraintSet.TOP, tv.getId(), ConstraintSet.BOTTOM);
         }
-        set.createHorizontalChain(ConstraintSet.PARENT_ID, ConstraintSet.LEFT,
+        /*set.createHorizontalChain(ConstraintSet.PARENT_ID, ConstraintSet.LEFT,
                 ConstraintSet.PARENT_ID, ConstraintSet.RIGHT,
                 buttons, null, ConstraintSet.CHAIN_PACKED);
 
-        /*for (int row = 0; row < KEYS_HEIGHT; ++row) {
+        for (int row = 0; row < KEYS_HEIGHT; ++row) {
             set.createHorizontalChain(binding.guideWest.getId(), ConstraintSet.LEFT, binding.guideEast.getId(), ConstraintSet.RIGHT, horizontals[row], null, ConstraintSet.CHAIN_PACKED);
             for (int col = 0; col < KEYS_WIDTH; ++col) {
                 set.createVerticalChain(tv.getId(), ConstraintSet.BOTTOM, binding.guideSouth.getId(), ConstraintSet.BOTTOM, verticals[col], null, ConstraintSet.CHAIN_PACKED);
@@ -101,7 +100,7 @@ public class MainActivity extends AppCompatActivity {
         }*/
 
         set.applyTo(layout);
-        set.clone(layout);
+       // set.clone(layout);
         LayoutParams params = tv.getLayoutParams();
         params.width = ConstraintLayout.LayoutParams.MATCH_CONSTRAINT;
         params.height = LayoutParams.WRAP_CONTENT;
