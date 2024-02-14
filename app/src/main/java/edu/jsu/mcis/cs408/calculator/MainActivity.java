@@ -57,7 +57,7 @@ public class MainActivity extends AppCompatActivity {
         set.connect(tv.getId(), ConstraintSet.LEFT, ConstraintSet.PARENT_ID, ConstraintSet.LEFT, 0);
         set.connect(tv.getId(), ConstraintSet.TOP, ConstraintSet.PARENT_ID, ConstraintSet.TOP, 0);
 
-        for (int i = 0; i < buttons.length; i++) {
+        for (int i = 0; i < buttons.length; ++i) {
 
             int id = View.generateViewId(); // generate new ID
             Button button = new Button(this);
@@ -66,17 +66,17 @@ public class MainActivity extends AppCompatActivity {
             button.setText(btnTextArray[i]); // set text (using a string resource)
             button.setTextSize(24); // set size
 
-            layout.addView(button,i); // add to layout
+            layout.addView(button); // add to layout
             buttons[i] = id; // store ID to collection
 
-        }
-
-        for (int id : buttons) {
             set.connect(id, ConstraintSet.LEFT, binding.guideWest.getId(), ConstraintSet.LEFT, 8);
             set.connect(id, ConstraintSet.RIGHT, binding.guideEast.getId(), ConstraintSet.RIGHT, 8);
             set.connect(id, ConstraintSet.BOTTOM, binding.guideSouth.getId(), ConstraintSet.BOTTOM);
             set.connect(id, ConstraintSet.TOP, tv.getId(), ConstraintSet.BOTTOM);
         }
+        /*for (int id : buttons) {
+
+        }*/
 
         set.applyTo(layout);
        // set.clone(layout);
@@ -89,7 +89,6 @@ public class MainActivity extends AppCompatActivity {
         button.height = ConstraintLayout.LayoutParams.WRAP_CONTENT;
         button.width = LayoutParams.WRAP_CONTENT;
         buttons.equals(button);
-
 
 
     }
