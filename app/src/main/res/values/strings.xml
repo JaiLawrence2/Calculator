@@ -24,49 +24,49 @@
     <string name= "equal_button">=</string>
 
     <string-array name="button_text">
-        <item>1</item>
-        <item>2</item>
-        <item>3</item>
-        <item>4</item>
-        <item>5</item>
-        <item>6</item>
         <item>7</item>
         <item>8</item>
         <item>9</item>
-        <item>0</item>
-        <item>\u00B1</item>
-        <item>\u00D7</item>
-        <item>\u00F7</item>
-        <item>C</item>
-        <item>-</item>
-        <item>.</item>
         <item>\u221A</item>
-        <item>=</item>
-        <item>+</item>
+        <item>C</item>
+        <item>4</item>
+        <item>5</item>
+        <item>6</item>
+        <item>\u00F7</item>
         <item>%</item>
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>\u00D7</item>
+        <item>-</item>
+        <item>\u00B1</item>
+        <item>0</item>
+        <item>.</item>
+        <item>+</item>
+        <item>=</item>
     </string-array>
 
     <string-array name="tags">
-        <item>btn1</item>
-        <item>btn2</item>
-        <item>btn3</item>
-        <item>btn4</item>
-        <item>btn5</item>
-        <item>btn6</item>
         <item>btn7</item>
         <item>btn8</item>
         <item>btn9</item>
-        <item>btnZero</item>
-        <item>btnPlusMinus</item>
-        <item>btndivide</item>
-        <item>btnMultiply</item>
-        <item>btnSubtract</item>
-        <item>btnAdd</item>
-        <item>btnPercent</item>
-        <item>btnEqual</item>
         <item>btnSqrt</item>
         <item>btnClear</item>
+        <item>btn4</item>
+        <item>btn5</item>
+        <item>btn6</item>
+        <item>btndivide</item>
+        <item>btnPercent</item>
+        <item>btn1</item>
+        <item>btn2</item>
+        <item>btn3</item>
+        <item>btnMultiply</item>
+        <item>btnSubtract</item>
+        <item>btnPlusMinus</item>
+        <item>btnZero</item>
         <item>btnDecimal</item>
+        <item>btnAdd</item>
+        <item>btnEqual</item>
     </string-array>
 
 

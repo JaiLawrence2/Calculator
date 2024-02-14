@@ -38,7 +38,8 @@ public class MainActivity extends AppCompatActivity {
         int[][] horizontals = new int[KEYS_HEIGHT][KEYS_WIDTH];
         int[][] verticals = new int[KEYS_WIDTH][KEYS_HEIGHT];
         int[] buttons = new int[BUTTON_GRID];
-
+        String[] btnTextArray = getResources().getStringArray(R.array.button_text);
+        String[] btnTagArray = getResources().getStringArray(R.array.tags);
 
         ConstraintSet set = new ConstraintSet();
         TextView tv = new TextView(this);
@@ -46,7 +47,7 @@ public class MainActivity extends AppCompatActivity {
         tv.setText(R.string.textplaceholder);
         tv.setTextSize(48);
 
-        set.connect(tv.getId(),ConstraintSet.RIGHT, ConstraintSet.PARENT_ID, ConstraintSet.RIGHT,0);
+        set.connect(tv.getId(),ConstraintSet.RIGHT, binding.guideEast.getId(), ConstraintSet.RIGHT,0);
         set.connect(tv.getId(), ConstraintSet.LEFT,ConstraintSet.PARENT_ID, ConstraintSet.LEFT,0);
         set.connect(tv.getId(),ConstraintSet.TOP, ConstraintSet.PARENT_ID, ConstraintSet.TOP,0);
         tv.setGravity(Gravity.END);
@@ -56,8 +57,8 @@ public class MainActivity extends AppCompatActivity {
             int id = View.generateViewId(); // generate new ID
             Button button = new Button(this);// create new TextView
             button.setId(id);  // assign ID
-            button.setTag(R.array.tags); // assign tag (for acquiring references later)
-            button.setText(R.string.percent_button); // set text (using a string resource)
+            button.setTag(btnTagArray[i]); // assign tag (for acquiring references later)
+            button.setText(btnTextArray[i]); // set text (using a string resource)
             button.setTextSize(24); // set size
             layout.addView(button); // add to layout
             buttons[i] = id; // store ID to collection
@@ -75,6 +76,11 @@ public class MainActivity extends AppCompatActivity {
 
         for (int col = 0; col < KEYS_WIDTH; ++col) {
             set.createVerticalChain(tv.getId(), ConstraintSet.BOTTOM, binding.guideSouth.getId(), ConstraintSet.BOTTOM, verticals[col], null, ConstraintSet.CHAIN_PACKED);
+        }
+        for (int j=0; j<BUTTON_GRID;++j){
+            set.createVerticalChain(tv.getId(),ConstraintSet.BOTTOM,
+                    binding.guideSouth.getId(),ConstraintSet.BOTTOM, buttons,
+                    null, ConstraintSet.CHAIN_PACKED);
         }
 
         set.applyTo(layout);
