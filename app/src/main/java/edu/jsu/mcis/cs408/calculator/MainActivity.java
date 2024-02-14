@@ -59,39 +59,46 @@ public class MainActivity extends AppCompatActivity {
         //Button button;
         LayoutParams buttondis;
         for (int i = 0; i < buttons.length; i++) {
+
             int id = View.generateViewId(); // generate new ID
             Button button = new Button(this);
             button.setId(id);  // assign ID
             button.setTag(btnTagArray[i]); // assign tag (for acquiring references later)
             button.setText(btnTextArray[i]); // set text (using a string resource)
             button.setTextSize(24); // set size
-            layout.addView(button); // add to layout
+
+            layout.addView(button,i); // add to layout
             buttons[i] = id; // store ID to collection
 
-            buttondis = button.getLayoutParams();
-            buttondis.height = ConstraintLayout.LayoutParams.WRAP_CONTENT;
-            buttondis.width = ConstraintLayout.LayoutParams.WRAP_CONTENT;
-
-
         }
+        set.clone(layout);
+
         for (int id : buttons) {
-            set.connect(id, ConstraintSet.LEFT, binding.guideWest.getId(), ConstraintSet.LEFT, 0);
-            set.connect(id, ConstraintSet.RIGHT, binding.guideEast.getId(), ConstraintSet.RIGHT, 0);
+            set.connect(id, ConstraintSet.LEFT, binding.guideWest.getId(), ConstraintSet.LEFT, 8);
+            set.connect(id, ConstraintSet.RIGHT, binding.guideEast.getId(), ConstraintSet.RIGHT, 8);
             set.connect(id, ConstraintSet.BOTTOM, binding.guideSouth.getId(), ConstraintSet.BOTTOM);
             set.connect(id, ConstraintSet.TOP, tv.getId(), ConstraintSet.BOTTOM);
-
         }
-        for (int row = 0; row < KEYS_HEIGHT; ++row) {
+        set.createHorizontalChain(ConstraintSet.PARENT_ID, ConstraintSet.LEFT,
+                ConstraintSet.PARENT_ID, ConstraintSet.RIGHT,
+                buttons, null, ConstraintSet.CHAIN_PACKED);
+
+        /*for (int row = 0; row < KEYS_HEIGHT; ++row) {
             set.createHorizontalChain(binding.guideWest.getId(), ConstraintSet.LEFT, binding.guideEast.getId(), ConstraintSet.RIGHT, horizontals[row], null, ConstraintSet.CHAIN_PACKED);
             for (int col = 0; col < KEYS_WIDTH; ++col) {
                 set.createVerticalChain(tv.getId(), ConstraintSet.BOTTOM, binding.guideSouth.getId(), ConstraintSet.BOTTOM, verticals[col], null, ConstraintSet.CHAIN_PACKED);
             }
-        }
-        for (int j = 0; j < BUTTON_GRID; ++j) {
+        }*/
+        /*for (int j = 0; j < BUTTON_GRID; ++j) {
             set.createVerticalChain(tv.getId(), ConstraintSet.BOTTOM,
                     binding.guideSouth.getId(), ConstraintSet.BOTTOM, buttons,
                     null, ConstraintSet.CHAIN_PACKED);
         }
+        for (int j = 0; j < KEYS_WIDTH; ++j) {
+            set.createHorizontalChain(binding.guideWest.getId(), ConstraintSet.LEFT,
+                    binding.guideEast.getId(), ConstraintSet.RIGHT, buttons,
+                    null, ConstraintSet.CHAIN_PACKED);
+        }*/
 
         set.applyTo(layout);
         set.clone(layout);
@@ -99,6 +106,11 @@ public class MainActivity extends AppCompatActivity {
         params.width = ConstraintLayout.LayoutParams.MATCH_CONSTRAINT;
         params.height = LayoutParams.WRAP_CONTENT;
         tv.setLayoutParams(params);
+
+        LayoutParams button = new LayoutParams(LayoutParams.WRAP_CONTENT,LayoutParams.WRAP_CONTENT);
+        button.height = ConstraintLayout.LayoutParams.WRAP_CONTENT;
+        button.width = LayoutParams.WRAP_CONTENT;
+        buttons.equals(button);
 
 
 
