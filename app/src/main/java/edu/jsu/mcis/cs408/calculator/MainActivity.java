@@ -69,7 +69,7 @@ public class MainActivity extends AppCompatActivity {
             buttons[i] = id; // store ID to collection
 
             buttondis = button.getLayoutParams();
-            buttondis.width = ConstraintLayout.LayoutParams.WRAP_CONTENT;
+            buttondis.height = ConstraintLayout.LayoutParams.WRAP_CONTENT;
             buttondis.width = ConstraintLayout.LayoutParams.WRAP_CONTENT;
 
 
