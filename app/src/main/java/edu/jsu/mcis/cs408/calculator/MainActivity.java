@@ -71,33 +71,12 @@ public class MainActivity extends AppCompatActivity {
 
         }
 
-
         for (int id : buttons) {
             set.connect(id, ConstraintSet.LEFT, binding.guideWest.getId(), ConstraintSet.LEFT, 8);
             set.connect(id, ConstraintSet.RIGHT, binding.guideEast.getId(), ConstraintSet.RIGHT, 8);
             set.connect(id, ConstraintSet.BOTTOM, binding.guideSouth.getId(), ConstraintSet.BOTTOM);
             set.connect(id, ConstraintSet.TOP, tv.getId(), ConstraintSet.BOTTOM);
         }
-        /*set.createHorizontalChain(ConstraintSet.PARENT_ID, ConstraintSet.LEFT,
-                ConstraintSet.PARENT_ID, ConstraintSet.RIGHT,
-                buttons, null, ConstraintSet.CHAIN_PACKED);
-
-        for (int row = 0; row < KEYS_HEIGHT; ++row) {
-            set.createHorizontalChain(binding.guideWest.getId(), ConstraintSet.LEFT, binding.guideEast.getId(), ConstraintSet.RIGHT, horizontals[row], null, ConstraintSet.CHAIN_PACKED);
-            for (int col = 0; col < KEYS_WIDTH; ++col) {
-                set.createVerticalChain(tv.getId(), ConstraintSet.BOTTOM, binding.guideSouth.getId(), ConstraintSet.BOTTOM, verticals[col], null, ConstraintSet.CHAIN_PACKED);
-            }
-        }*/
-        /*for (int j = 0; j < BUTTON_GRID; ++j) {
-            set.createVerticalChain(tv.getId(), ConstraintSet.BOTTOM,
-                    binding.guideSouth.getId(), ConstraintSet.BOTTOM, buttons,
-                    null, ConstraintSet.CHAIN_PACKED);
-        }
-        for (int j = 0; j < KEYS_WIDTH; ++j) {
-            set.createHorizontalChain(binding.guideWest.getId(), ConstraintSet.LEFT,
-                    binding.guideEast.getId(), ConstraintSet.RIGHT, buttons,
-                    null, ConstraintSet.CHAIN_PACKED);
-        }*/
 
         set.applyTo(layout);
        // set.clone(layout);
