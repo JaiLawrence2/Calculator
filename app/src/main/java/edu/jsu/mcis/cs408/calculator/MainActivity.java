@@ -11,13 +11,26 @@ import android.view.ViewGroup.LayoutParams;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import edu.jsu.mcis.cs408.calculator.databinding.ActivityMainBinding;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements AbstractMainActivityView{
+    class CalculatorClickHandler implements View.OnClickListener {
+
+        @Override
+        public void onClick(View view) {
+            String tag = view.getTag().toString();
+            Toast toast = Toast.makeText(binding.getRoot().getContext(), tag, Toast.LENGTH_SHORT);
+            toast.show();
+            // INSERT EVENT HANDLING CODE HERE
+        }
+
+    }
     private static final int KEYS_HEIGHT = 4;
     private static final int KEYS_WIDTH = 5;
     private ActivityMainBinding binding;
+    CalculatorClickHandler click = new CalculatorClickHandler();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,6 +74,7 @@ public class MainActivity extends AppCompatActivity {
                  layout.addView(button);
                  horizontals[row][col] = id;
                  verticals[col][row] = id;
+                 button.setOnClickListener(click);
              }
         }
         for (int row = 0; row < KEYS_HEIGHT; ++row) {
