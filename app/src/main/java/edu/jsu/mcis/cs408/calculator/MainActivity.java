@@ -57,7 +57,7 @@ public class MainActivity extends AppCompatActivity {
                  button.setId(id);
                  button.setTag(btnTagArray[i]);
                  button.setText(btnTextArray[i]);
-                 button.setTextSize(48);
+                 button.setTextSize(28);
                  layout.addView(button);
                  horizontals[row][col] = id;
                  verticals[col][row] = id;
