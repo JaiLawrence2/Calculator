@@ -6,17 +6,11 @@ import androidx.constraintlayout.widget.ConstraintSet;
 
 import android.view.Gravity;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
 
 import android.os.Bundle;
 import android.widget.Button;
-import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
-
-import java.nio.charset.StandardCharsets;
-import java.util.Objects;
 
 import edu.jsu.mcis.cs408.calculator.databinding.ActivityMainBinding;
 
@@ -24,8 +18,6 @@ public class MainActivity extends AppCompatActivity {
     private static final int KEYS_HEIGHT = 4;
     private static final int KEYS_WIDTH = 5;
     private ActivityMainBinding binding;
-
-    public static final int BUTTON_GRID = 20;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,13 +32,13 @@ public class MainActivity extends AppCompatActivity {
         ConstraintLayout layout = binding.layout;
         int[][] horizontals = new int[KEYS_HEIGHT][KEYS_WIDTH];
         int[][] verticals = new int[KEYS_WIDTH][KEYS_HEIGHT];
-        int[] buttons = new int[BUTTON_GRID];
         String[] btnTextArray = getResources().getStringArray(R.array.button_text);
         String[] btnTagArray = getResources().getStringArray(R.array.tags);
 
         ConstraintSet set = new ConstraintSet();
         TextView tv = new TextView(this);
-        tv.setId(View.generateViewId());
+        int tv_id = View.generateViewId();
+        tv.setId(tv_id);
         tv.setTag("TextView");
         tv.setText(R.string.textplaceholder);
         tv.setGravity(Gravity.END);
@@ -57,39 +49,32 @@ public class MainActivity extends AppCompatActivity {
         set.connect(tv.getId(), ConstraintSet.LEFT, ConstraintSet.PARENT_ID, ConstraintSet.LEFT, 0);
         set.connect(tv.getId(), ConstraintSet.TOP, ConstraintSet.PARENT_ID, ConstraintSet.TOP, 0);
 
-        for (int i = 0; i < buttons.length; ++i) {
-
-            int id = View.generateViewId(); // generate new ID
-            Button button = new Button(this);
-            button.setId(id);  // assign ID
-            button.setTag(btnTagArray[i]); // assign tag (for acquiring references later)
-            button.setText(btnTextArray[i]); // set text (using a string resource)
-            button.setTextSize(24); // set size
-
-            layout.addView(button); // add to layout
-            buttons[i] = id; // store ID to collection
-
-            set.connect(id, ConstraintSet.LEFT, binding.guideWest.getId(), ConstraintSet.LEFT, 8);
-            set.connect(id, ConstraintSet.RIGHT, binding.guideEast.getId(), ConstraintSet.RIGHT, 8);
-            set.connect(id, ConstraintSet.BOTTOM, binding.guideSouth.getId(), ConstraintSet.BOTTOM);
-            set.connect(id, ConstraintSet.TOP, tv.getId(), ConstraintSet.BOTTOM);
+        for (int row = 0; row < KEYS_HEIGHT; ++row) {
+             for (int col = 0; col < KEYS_WIDTH; ++col) {
+                 int i = (row * KEYS_WIDTH) + col;
+                 int id = View.generateViewId();
+                 Button button = new Button(this);
+                 button.setId(id);
+                 button.setTag(btnTagArray[i]);
+                 button.setText(btnTextArray[i]);
+                 button.setTextSize(48);
+                 layout.addView(button);
+                 horizontals[row][col] = id;
+                 verticals[col][row] = id;
+             }
         }
-        /*for (int id : buttons) {
-
-        }*/
-
+        for (int row = 0; row < KEYS_HEIGHT; ++row) {
+             set.createHorizontalChain(binding.guideWest.getId(), ConstraintSet.LEFT, binding.guideEast.getId(),
+                     ConstraintSet.RIGHT, horizontals[row], null, ConstraintSet.CHAIN_PACKED);
+        }
+        for (int col = 0; col < KEYS_WIDTH; ++col) {
+             set.createVerticalChain(tv.getId(), ConstraintSet.BOTTOM, binding.guideSouth.getId(),
+                     ConstraintSet.BOTTOM, verticals[col], null, ConstraintSet.CHAIN_PACKED);
+        }
         set.applyTo(layout);
-       // set.clone(layout);
         LayoutParams params = tv.getLayoutParams();
         params.width = ConstraintLayout.LayoutParams.MATCH_CONSTRAINT;
         params.height = LayoutParams.WRAP_CONTENT;
         tv.setLayoutParams(params);
-
-        LayoutParams button = new LayoutParams(LayoutParams.WRAP_CONTENT,LayoutParams.WRAP_CONTENT);
-        button.height = ConstraintLayout.LayoutParams.WRAP_CONTENT;
-        button.width = LayoutParams.WRAP_CONTENT;
-        buttons.equals(button);
-
-
     }
 }
