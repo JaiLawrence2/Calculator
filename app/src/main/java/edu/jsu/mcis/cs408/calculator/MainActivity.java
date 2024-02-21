@@ -13,9 +13,21 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.beans.PropertyChangeEvent;
+import java.math.BigDecimal;
+
 import edu.jsu.mcis.cs408.calculator.databinding.ActivityMainBinding;
 
 public class MainActivity extends AppCompatActivity implements AbstractMainActivityView{
+    private CalculatorController controller;
+
+
+    private static final int KEYS_HEIGHT = 4;
+    private static final int KEYS_WIDTH = 5;
+    private ActivityMainBinding binding;
+    CalculatorClickHandler click = new CalculatorClickHandler();
+    CalculatorModel model;
+    TextView text;
     class CalculatorClickHandler implements View.OnClickListener {
 
         @Override
@@ -24,14 +36,15 @@ public class MainActivity extends AppCompatActivity implements AbstractMainActiv
             Toast toast = Toast.makeText(binding.getRoot().getContext(), tag, Toast.LENGTH_SHORT);
             toast.show();
             // INSERT EVENT HANDLING CODE HERE
+
+            StringBuilder s = new StringBuilder();
+            s.append(tag);
+            text.setText(s.toString());
+            //CalculatorModel lhs = Integer.parseInt(text.getText().toString());
+            //BigDecimal result =
         }
 
     }
-    private static final int KEYS_HEIGHT = 4;
-    private static final int KEYS_WIDTH = 5;
-    private ActivityMainBinding binding;
-    CalculatorClickHandler click = new CalculatorClickHandler();
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -39,6 +52,13 @@ public class MainActivity extends AppCompatActivity implements AbstractMainActiv
         View view = binding.getRoot();
         setContentView(view);
         initLayout();
+        controller = new CalculatorController();
+        CalculatorModel model = new CalculatorModel();
+
+        /* Register Activity View and Model with Controller */
+
+        controller.addView(this);
+        controller.addModel(model);
     }
 
     private void initLayout() {
@@ -90,5 +110,10 @@ public class MainActivity extends AppCompatActivity implements AbstractMainActiv
         params.width = ConstraintLayout.LayoutParams.MATCH_CONSTRAINT;
         params.height = LayoutParams.WRAP_CONTENT;
         tv.setLayoutParams(params);
+    }
+
+    @Override
+    public void modelPropertyChange(PropertyChangeEvent evt) {
+
     }
 }
