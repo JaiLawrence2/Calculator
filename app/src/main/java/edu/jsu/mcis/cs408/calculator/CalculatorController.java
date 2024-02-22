@@ -1,10 +1,8 @@
 package edu.jsu.mcis.cs408.calculator;
 
-import android.widget.TextView;
-
 public class CalculatorController extends CalculatorAbstractController{
-
-    public void changeTextView (String textview ){
-        setModelProperty(textview, textview);
+    public static final String TV = "0";
+    public void changeTextView (String newText ){
+        setModelProperty(TV, newText);
     }
 }

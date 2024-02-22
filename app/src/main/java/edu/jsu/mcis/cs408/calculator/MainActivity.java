@@ -20,14 +20,13 @@ import edu.jsu.mcis.cs408.calculator.databinding.ActivityMainBinding;
 
 public class MainActivity extends AppCompatActivity implements AbstractMainActivityView{
     private CalculatorController controller;
-
+    private TextView tv;
 
     private static final int KEYS_HEIGHT = 4;
     private static final int KEYS_WIDTH = 5;
     private ActivityMainBinding binding;
     CalculatorClickHandler click = new CalculatorClickHandler();
     CalculatorModel model;
-    TextView text;
     class CalculatorClickHandler implements View.OnClickListener {
 
         @Override
@@ -36,10 +35,17 @@ public class MainActivity extends AppCompatActivity implements AbstractMainActiv
             Toast toast = Toast.makeText(binding.getRoot().getContext(), tag, Toast.LENGTH_SHORT);
             toast.show();
             // INSERT EVENT HANDLING CODE HERE
-
+            if (tag.equals("btn1")){
+                String newText = "1";
+                controller.changeTextView(newText);
+            }
             StringBuilder s = new StringBuilder();
             s.append(tag);
-            text.setText(s.toString());
+            tv.setText(s.toString());
+            if (tv.getText().toString() == "0"){
+                CalculatorModel.CalculatorState.values();
+                CalculatorModel.CalculatorState state = CalculatorModel.CalculatorState.CLEAR;
+            }
             //CalculatorModel lhs = Integer.parseInt(text.getText().toString());
             //BigDecimal result =
         }
@@ -114,6 +120,7 @@ public class MainActivity extends AppCompatActivity implements AbstractMainActiv
 
     @Override
     public void modelPropertyChange(PropertyChangeEvent evt) {
-
+        String propertyName = evt.getPropertyName();
+        String propertyValue = evt.getNewValue().toString();
     }
 }

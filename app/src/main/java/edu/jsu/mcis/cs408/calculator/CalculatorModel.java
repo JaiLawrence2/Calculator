@@ -11,8 +11,9 @@ public class CalculatorModel extends CalculatorAbstractModel {
         RESULT,
         ERROR
     }
-
-    public class CalcState{
+    public void initDefault(){
+        CalculatorState state = CalculatorState.CLEAR;
+    }
         private CalculatorState state;
 
         private BigDecimal lhs;
@@ -43,7 +44,7 @@ public class CalculatorModel extends CalculatorAbstractModel {
             this.rhs = rhs;
         }
 
-        public BigDecimal calculate(){
+        /*public BigDecimal calculate(BigDecimal lhs, String operator, BigDecimal rhs){
             BigDecimal result = BigDecimal.valueOf(0);
             switch(operator){
                 case "+":
@@ -64,6 +65,5 @@ public class CalculatorModel extends CalculatorAbstractModel {
                     break;
             }
             return result;
-        }
+        }*/
     }
-}
