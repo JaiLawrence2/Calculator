@@ -36,18 +36,13 @@ public class MainActivity extends AppCompatActivity implements AbstractMainActiv
             toast.show();
             // INSERT EVENT HANDLING CODE HERE
             if (tag.equals("btn1")){
-                String newText = "1";
-                controller.changeTextView(newText);
+                Button newText = binding.layout.findViewWithTag(tag);
+                controller.changeTextView(String.valueOf(newText));
+                //StringBuilder s = new StringBuilder();
+                //s.append(newText);
+                //add;
+                //tv.setText(Integer.parseInt(s.toString()));
             }
-            StringBuilder s = new StringBuilder();
-            s.append(tag);
-            tv.setText(s.toString());
-            if (tv.getText().toString() == "0"){
-                CalculatorModel.CalculatorState.values();
-                CalculatorModel.CalculatorState state = CalculatorModel.CalculatorState.CLEAR;
-            }
-            //CalculatorModel lhs = Integer.parseInt(text.getText().toString());
-            //BigDecimal result =
         }
 
     }
