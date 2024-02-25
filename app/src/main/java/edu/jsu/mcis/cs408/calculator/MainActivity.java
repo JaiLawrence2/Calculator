@@ -4,6 +4,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.constraintlayout.widget.ConstraintSet;
 
+import android.nfc.Tag;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup.LayoutParams;
@@ -19,14 +21,14 @@ import java.math.BigDecimal;
 import edu.jsu.mcis.cs408.calculator.databinding.ActivityMainBinding;
 
 public class MainActivity extends AppCompatActivity implements AbstractMainActivityView{
-    private CalculatorController controller;
-    private TextView tv;
+    private static final String TAG = "MainActivity";
+    //private CalculatorController controller;
 
     private static final int KEYS_HEIGHT = 4;
     private static final int KEYS_WIDTH = 5;
     private ActivityMainBinding binding;
     CalculatorClickHandler click = new CalculatorClickHandler();
-    CalculatorModel model;
+    CalculatorController controller;
     class CalculatorClickHandler implements View.OnClickListener {
 
         @Override
@@ -34,15 +36,14 @@ public class MainActivity extends AppCompatActivity implements AbstractMainActiv
             String tag = view.getTag().toString();
             Toast toast = Toast.makeText(binding.getRoot().getContext(), tag, Toast.LENGTH_SHORT);
             toast.show();
+            Log.i(tag, "button clicked is"+tag);
             // INSERT EVENT HANDLING CODE HERE
-            if (tag.equals("btn1")){
-                Button newText = binding.layout.findViewWithTag(tag);
-                controller.changeTextView(String.valueOf(newText));
-                //StringBuilder s = new StringBuilder();
-                //s.append(newText);
-                //add;
-                //tv.setText(Integer.parseInt(s.toString()));
+            if (tag.contains("btn")){
+                String newText = String.valueOf(binding.layout.findViewWithTag(tag));
+                controller.changeTextView(newText);
+                Log.i(TAG, "button text is"+ newText);
             }
+
         }
 
     }
@@ -117,5 +118,20 @@ public class MainActivity extends AppCompatActivity implements AbstractMainActiv
     public void modelPropertyChange(PropertyChangeEvent evt) {
         String propertyName = evt.getPropertyName();
         String propertyValue = evt.getNewValue().toString();
+
+        Log.i(TAG,"new "+propertyName+" Value from Model: "+propertyValue);
+
+        if(propertyName.equals(CalculatorController.NEW_DIGIT)){
+            String oldPropertyValue = CalculatorController.NEW_DIGIT;
+
+            if (!oldPropertyValue.equals(propertyValue)){
+                updateDisplay(propertyValue);
+            }
+        }
+    }
+
+    private void updateDisplay(String propertyValue) {
+        TextView displayTextView = binding.layout.findViewWithTag("TextView");
+        displayTextView.setText(propertyValue);
     }
 }

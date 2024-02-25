@@ -15,5 +15,5 @@ public interface AbstractMainActivityView {
      * render or handle the corresponding property of the Model differently.
      */
 
-    public abstract void modelPropertyChange(final PropertyChangeEvent evt);
+    void modelPropertyChange(final PropertyChangeEvent evt);
 }
