@@ -42,7 +42,6 @@ public class MainActivity extends AppCompatActivity implements AbstractMainActiv
                 Log.i(CalculatorModel.TAG, "State "+ CalculatorModel.state );
                 controller.changeTextView(newText);
                 Log.i(TAG, "button text is"+ newText);
-                Log.i(CalculatorModel.TAG, "LHS "+ CalculatorModel.lhs);
             }
 
         }
@@ -134,5 +133,6 @@ public class MainActivity extends AppCompatActivity implements AbstractMainActiv
     private void updateDisplay(String propertyValue) {
         TextView displayTextView = binding.layout.findViewWithTag("TextView");
         displayTextView.setText(propertyValue);
+        Log.i(TAG, "Textview is now: "+ displayTextView);
     }
 }

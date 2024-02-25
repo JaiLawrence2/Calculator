@@ -5,14 +5,16 @@ public enum OperatorChoice {
     SUBTRACTION("-"),
     MULTIPLICATION("×"),
     DIVISION("÷"),
-    SQRT("√");
+    SQRT("√"),
+    PERCENT("%"),
+    PLUSMINUS("±");
 
     private final String symbol;
 
     OperatorChoice(String symbol){
         this.symbol = symbol;
     }
-    public String getSymbol(){
+    public String grabSign(){
         return symbol;
     }
 }
