@@ -1,24 +1,22 @@
 package edu.jsu.mcis.cs408.calculator;
 
-import static edu.jsu.mcis.cs408.calculator.CalculatorController.NEW_DIGIT;
-
 import android.util.Log;
 
 import java.math.BigDecimal;
 
 public class CalculatorModel extends CalculatorAbstractModel {
     public static final String TAG = "CalculatorModel";
-    private static CalculatorState state;
-    private BigDecimal lhs;
+    public static CalculatorState state;
+    //public static String lhs;
+    public static BigDecimal lhs;
     private BigDecimal rhs;
-    private char operator;
+    private OperatorChoice operator;
 
     public CalculatorModel() {
         state = CalculatorState.CLEAR;
         lhs = BigDecimal.ZERO;
         rhs = BigDecimal.ZERO;
     }
-
     public CalculatorState setNewDigit(String newText) {
         switch (state) {
             case CLEAR:
@@ -43,26 +41,27 @@ public class CalculatorModel extends CalculatorAbstractModel {
         return state;
     }
 
-    public BigDecimal calculate(BigDecimal lhs, char operator, BigDecimal rhs) {
+    public BigDecimal calculate(BigDecimal lhs,OperatorChoice operator, BigDecimal rhs) {
         BigDecimal result = BigDecimal.ZERO;
         switch (operator) {
-            case '+':
+            case ADDITION:
+                getOperator();
                 result = lhs.add(rhs);
                 break;
-            case '-':
+            case SUBTRACTION:
                 result = lhs.subtract(rhs);
                 break;
-            case '*':
+            case MULTIPLICATION:
                 result = lhs.multiply(rhs);
                 break;
-            case '÷':
+            case DIVISION:
                 if (rhs.compareTo(BigDecimal.ZERO) != 0) {
                     result = lhs.divide(rhs);
                 } else {
                     throw new ArithmeticException("Cannot divide by Zero");
                 }
                 break;
-            case '\u221A':
+            case SQRT:
                 result = BigDecimal.valueOf(Math.sqrt(lhs.doubleValue()));
                 break;
         }
@@ -86,11 +85,11 @@ public class CalculatorModel extends CalculatorAbstractModel {
         return rhs;
     }
 
-    public char getOperator() {
+    public OperatorChoice getOperator() {
         return operator;
     }
 
-    public void setOperator(char operator) {
+    public void setOperator(OperatorChoice operator) {
         this.operator = operator;
     }
 }

@@ -67,7 +67,6 @@ public abstract class CalculatorAbstractController implements PropertyChangeList
 
                 Method method = model.getClass().getMethod("set" + propertyName, newValue.getClass());
                 method.invoke(model, newValue);
-
             }
 
             catch (Exception e) {

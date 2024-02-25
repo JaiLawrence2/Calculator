@@ -22,8 +22,6 @@ import edu.jsu.mcis.cs408.calculator.databinding.ActivityMainBinding;
 
 public class MainActivity extends AppCompatActivity implements AbstractMainActivityView{
     private static final String TAG = "MainActivity";
-    //private CalculatorController controller;
-
     private static final int KEYS_HEIGHT = 4;
     private static final int KEYS_WIDTH = 5;
     private ActivityMainBinding binding;
@@ -39,9 +37,12 @@ public class MainActivity extends AppCompatActivity implements AbstractMainActiv
             Log.i(tag, "button clicked is"+tag);
             // INSERT EVENT HANDLING CODE HERE
             if (tag.contains("btn")){
-                String newText = String.valueOf(binding.layout.findViewWithTag(tag));
+                Button button = (Button) view;
+                String newText = button.getText().toString();
+                Log.i(CalculatorModel.TAG, "State "+ CalculatorModel.state );
                 controller.changeTextView(newText);
                 Log.i(TAG, "button text is"+ newText);
+                Log.i(CalculatorModel.TAG, "LHS "+ CalculatorModel.lhs);
             }
 
         }
