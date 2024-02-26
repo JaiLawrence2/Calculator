@@ -9,13 +9,13 @@ public enum OperatorChoice {
     PERCENT("%"),
     PLUSMINUS("±");
 
-    private final String symbol;
+    private final String sign;
 
-    OperatorChoice(String symbol){
-        this.symbol = symbol;
+    OperatorChoice(String sign){
+        this.sign = sign;
     }
     public String grabSign(){
-        return symbol;
+        return sign;
     }
 }
 

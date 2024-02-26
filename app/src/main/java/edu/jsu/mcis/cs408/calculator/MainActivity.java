@@ -39,7 +39,6 @@ public class MainActivity extends AppCompatActivity implements AbstractMainActiv
             if (tag.contains("btn")){
                 Button button = (Button) view;
                 String newText = button.getText().toString();
-                Log.i(CalculatorModel.TAG, "State "+ CalculatorModel.state );
                 controller.changeTextView(newText);
                 Log.i(TAG, "button text is"+ newText);
             }
