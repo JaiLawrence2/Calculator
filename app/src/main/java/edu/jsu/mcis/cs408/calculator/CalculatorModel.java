@@ -14,12 +14,15 @@ public class CalculatorModel extends CalculatorAbstractModel {
     private BigDecimal rhs;
     StringBuilder left = new StringBuilder();
     StringBuilder right = new StringBuilder();
+    BigDecimal result;
+    String newresult;
     //private OperatorChoice currentoperator = OperatorChoice;
 
     public CalculatorModel() {
         state = CalculatorState.CLEAR;
         lhs = BigDecimal.ZERO;
         rhs = BigDecimal.ZERO;
+        result = BigDecimal.ZERO;
     }
     public CalculatorState setNewDigit(String newText) {
         switch (state) {
@@ -53,7 +56,10 @@ public class CalculatorModel extends CalculatorAbstractModel {
                 break;
             case RHS:
                 if (newText == "="){
+                    calculate(lhs,currentChoice,rhs);
+                    Log.i(TAG, "Result is" + result);
                     state = CalculatorState.RESULT;
+                    firePropertyChange(CalculatorController.NEW_DIGIT, result, newresult);
                 }
                 else{
                     right.append(newText);
@@ -98,28 +104,33 @@ public boolean isOperator(String newText){
         }
     }
     public BigDecimal calculate(BigDecimal lhs,OperatorChoice currentChoice, BigDecimal rhs) {
-        BigDecimal result = BigDecimal.ZERO;
+
         switch (currentChoice) {
             case ADDITION:
                 getOperator();
-                result = lhs.add(rhs);
+                result= lhs.add(rhs);
+                newresult = String.valueOf(result);
                 Log.i(TAG, "result is "+result);
                 break;
             case SUBTRACTION:
                 result = lhs.subtract(rhs);
+                newresult = String.valueOf(result);
                 break;
             case MULTIPLICATION:
                 result = lhs.multiply(rhs);
+                newresult = String.valueOf(result);
                 break;
             case DIVISION:
                 if (rhs.compareTo(BigDecimal.ZERO) != 0) {
                     result = lhs.divide(rhs);
+                    newresult = String.valueOf(result);
                 } else {
                     throw new ArithmeticException("Cannot divide by Zero");
                 }
                 break;
             case SQRT:
                 result = BigDecimal.valueOf(Math.sqrt(lhs.doubleValue()));
+                newresult = String.valueOf(result);
                 break;
         }
         return result;
