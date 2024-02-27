@@ -13,17 +13,15 @@ public class CalculatorModel extends CalculatorAbstractModel {
     StringBuilder left = new StringBuilder();
     StringBuilder right = new StringBuilder();
     StringBuilder result = new StringBuilder();
-    BigDecimal newresult;
     private BigDecimal result_one;
 
     public CalculatorModel() {
         state = CalculatorState.CLEAR;
         lhs = BigDecimal.ZERO;
         rhs = BigDecimal.ZERO;
-        newresult = BigDecimal.ZERO;
+        result_one = BigDecimal.ZERO;
     }
     public void setNewDigit(String newText) {
-        //left.append(newText);
         CalculatorState newstate = null;
         switch (state) {
             case CLEAR:
@@ -37,13 +35,22 @@ public class CalculatorModel extends CalculatorAbstractModel {
                     newstate = CalculatorState.OP_SELECTED;
                     Log.i(TAG, "newText = " + newText);
                     Operators(newText);
-
                     Log.i(TAG, "OPERATOR: "+currentChoice+ " State: "+state);
+                    break;
                 }
                 else if (newText.equals(".")){
                     left.append(newText);
                     setLhs(left.toString());
+                    break;
+                }
+                /*else if (newText.equals("√")){
+                    left.append(Math.sqrt(Double.parseDouble(newText)));
+                    setLhs(left.toString());
                     firePropertyChange(CalculatorController.NEW_DIGIT, null, lhs);
+                }*/
+                else if(newText.equals("C")){
+                    newstate = CalculatorState.CLEAR;
+                    reset();
                 }
                 else{
                     left.append(newText);
@@ -54,7 +61,6 @@ public class CalculatorModel extends CalculatorAbstractModel {
                 newstate = CalculatorState.RHS;
                 right.append(newText);
                 setRhs(right.toString());
-
                 break;
             case RHS:
                 if (newText.equals("=")){
@@ -64,23 +70,16 @@ public class CalculatorModel extends CalculatorAbstractModel {
                     Log.i(TAG, "Values are " + currentChoice);
                     Log.i(TAG, "Values are " + rhs);
                     calculate(lhs,currentChoice,rhs);
-                    Log.i(TAG, "Result is" + newresult);
-                    firePropertyChange(CalculatorController.NEW_DIGIT, null, result);
                     break;
                 }
                 right.append(newText);
                 setRhs(right.toString());
-                firePropertyChange(CalculatorController.NEW_DIGIT, null,rhs);
+
                 break;
             case RESULT:
                 if (newText.equals("C")){
                     newstate = CalculatorState.CLEAR;
-                    left.setLength(0);
-                    right.setLength(0);
-                    lhs = BigDecimal.ZERO;
-                    rhs = BigDecimal.ZERO;
-                    newresult = BigDecimal.ZERO;
-                    result.setLength(0);
+                    reset();
                     break;
                 }
             case ERROR:
@@ -91,6 +90,17 @@ public class CalculatorModel extends CalculatorAbstractModel {
             this.state = newstate;
         }
     }
+
+    private void reset() {
+        left.setLength(0);
+        right.setLength(0);
+        lhs = BigDecimal.ZERO;
+        rhs = BigDecimal.ZERO;
+        //result.setLength(0);
+        result_one = BigDecimal.ZERO;
+        firePropertyChange(CalculatorController.NEW_DIGIT, null, result_one);
+    }
+
     public boolean isOperator(String newText){
         if (newText.equals("+")|| newText.equals("-")||newText.equals("×")||newText.equals("÷")){
             return true;
@@ -119,27 +129,39 @@ public class CalculatorModel extends CalculatorAbstractModel {
             setOperatorChoice(newChoice);
             Log.i(TAG, "Operator = " + newChoice.grabSign());
         }
+        else if(newText.matches(OperatorChoice.SQRT.grabSign())){
+            OperatorChoice newChoice = OperatorChoice.SQRT;
+            setOperatorChoice(newChoice);
+            Log.i(TAG, "Operator = " + newChoice.grabSign());
+        }
         Log.i(TAG, "Operator = " + currentChoice.grabSign());
         return currentChoice;
     }
     public void calculate(BigDecimal lhs,OperatorChoice currentChoice, BigDecimal rhs) {
         if (currentChoice.equals(OperatorChoice.ADDITION)){
-            result_one = lhs.add(rhs);
-            result.append(result_one);
+            result.append(lhs.add(rhs));
+            setResult(result.toString());
             Log.i(TAG, "result is "+result_one);
-            //firePropertyChange(CalculatorController.NEW_DIGIT, null, result_one);
         }
         else if (currentChoice.equals(OperatorChoice.SUBTRACTION)){
-            result_one = lhs.add(rhs);
+            result.append(lhs.subtract(rhs));
+            setResult(result.toString());
             Log.i(TAG, "result is "+result_one);
         }
         else if (currentChoice.equals(OperatorChoice.MULTIPLICATION)) {
-            result_one = lhs.multiply(rhs);
+            result.append(lhs.multiply(rhs));
+            setResult(result.toString());
             Log.i(TAG, "result is " + result_one);
         }
         else if(currentChoice.equals(OperatorChoice.DIVISION)) {
-            result_one = lhs.divide(rhs);
+            result.append(lhs.divide(rhs));
+            setResult(result.toString());
             Log.i(TAG, "result is "+result_one);
+        }
+        else if(currentChoice.equals(OperatorChoice.SQRT)){
+            result.append(rhs.multiply(BigDecimal.valueOf(Long.parseLong("0.5"))));
+            setResult(result.toString());
+            Log.i(TAG, "result is: "+result_one);
         }
 
             /*case SQRT:
@@ -154,10 +176,10 @@ public class CalculatorModel extends CalculatorAbstractModel {
     }
 
     private void setResult(String result) {
-        BigDecimal old_result = this.newresult;
-        newresult = new BigDecimal(result.toString());
-        Log.i(TAG, "Result: "+newresult);
-        firePropertyChange(CalculatorController.NEW_DIGIT, old_result, newresult);
+        BigDecimal old_result = this.result_one;
+        result_one = new BigDecimal(result.toString());
+        Log.i(TAG, "Result: "+result_one);
+        firePropertyChange(CalculatorController.NEW_DIGIT, old_result, result_one);
     }
 
     public void setLhs(String newText) {
@@ -174,6 +196,7 @@ public class CalculatorModel extends CalculatorAbstractModel {
         firePropertyChange(CalculatorController.NEW_DIGIT,null,rhs);
         Log.i(TAG,"RHS: "+ rhs);
         Log.i(TAG, "Value change from "+old_rhs+ "to "+rhs);
+        firePropertyChange(CalculatorController.NEW_DIGIT, null,rhs);
     }
 
     public BigDecimal getLhs() {
