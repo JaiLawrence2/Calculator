@@ -5,9 +5,4 @@ public class CalculatorController extends CalculatorAbstractController{
     public void changeTextView (String newText){
         setModelProperty(NEW_DIGIT, newText);
     }
-
-    /*public void processButton(String buttonTag) {
-        model.processButton(buttonTag);
-    }*/
-
 }

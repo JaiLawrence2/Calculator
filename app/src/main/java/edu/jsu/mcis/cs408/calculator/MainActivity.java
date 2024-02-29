@@ -34,17 +34,13 @@ public class MainActivity extends AppCompatActivity implements AbstractMainActiv
             String tag = view.getTag().toString();
             Toast toast = Toast.makeText(binding.getRoot().getContext(), tag, Toast.LENGTH_SHORT);
             toast.show();
-            Log.i(tag, "button clicked is"+tag);
             // INSERT EVENT HANDLING CODE HERE
             if (tag.contains("btn")){
                 Button button = (Button) view;
                 String newText = button.getText().toString();
                 controller.changeTextView(newText);
-                Log.i(TAG, "button text is"+ newText);
             }
-
         }
-
     }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -118,8 +114,6 @@ public class MainActivity extends AppCompatActivity implements AbstractMainActiv
         String propertyName = evt.getPropertyName();
         String propertyValue = evt.getNewValue().toString();
 
-        Log.i(TAG,"new "+propertyName+" Value from Model: "+propertyValue);
-
         if(propertyName.equals(CalculatorController.NEW_DIGIT)){
             String oldPropertyValue = CalculatorController.NEW_DIGIT;
 
@@ -132,6 +126,5 @@ public class MainActivity extends AppCompatActivity implements AbstractMainActiv
     private void updateDisplay(String propertyValue) {
         TextView displayTextView = binding.layout.findViewWithTag("TextView");
         displayTextView.setText(propertyValue);
-        Log.i(TAG, "Textview is now: "+ displayTextView);
     }
 }
