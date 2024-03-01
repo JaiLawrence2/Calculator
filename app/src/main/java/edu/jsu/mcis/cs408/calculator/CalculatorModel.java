@@ -3,6 +3,7 @@ package edu.jsu.mcis.cs408.calculator;
 import android.util.Log;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 
 public class CalculatorModel extends CalculatorAbstractModel {
     public static final String TAG = "CalculatorModel";
@@ -33,13 +34,12 @@ public class CalculatorModel extends CalculatorAbstractModel {
             case LHS:
                 isOperator(newText);
                 if (isOperator(newText)) {
-                    newstate = CalculatorState.OP_SELECTED;
-                    Operators(newText);
-                    break;
-                } else if (newText.equals(".")) {
-                    left.append(newText);
-                    setLhs(left.toString());
-                    break;
+                    if (state.equals(CalculatorState.LHS)){
+                        newstate = CalculatorState.OP_SELECTED;
+                        Operators(newText);
+                        break;
+                    }
+
                 }
                 else if (newText.equals("%")) {
                     PercentClick();
@@ -89,6 +89,7 @@ public class CalculatorModel extends CalculatorAbstractModel {
                     if (value.compareTo(BigDecimal.ZERO) >= 0) {
                         result_one = BigDecimal.valueOf(Math.sqrt(value.doubleValue()));
                         setRhs(result_one.toString());
+                        break;
                     }
                 }
                 right.append(newText);
@@ -99,6 +100,21 @@ public class CalculatorModel extends CalculatorAbstractModel {
                     newstate = CalculatorState.CLEAR;
                     reset();
                     break;
+                }
+                else if (newText.equals(isOperator(newText))){
+                    lhs = result_one;
+                    state = CalculatorState.OP_SELECTED;
+                    right.setLength(0);
+                    result.setLength(0);
+                    Log.i(TAG, "LHS is now equal to: "+lhs);
+                    break;
+                }else if (newText.equals("√")) {
+                    BigDecimal value = new BigDecimal(result.toString());
+                    if (value.compareTo(BigDecimal.ZERO) >= 0) {
+                        result_one = BigDecimal.valueOf(Math.sqrt(value.doubleValue()));
+                        setRhs(result_one.toString());
+                        break;
+                    }
                 }
             case ERROR:
                 newstate = CalculatorState.CLEAR;
@@ -120,7 +136,7 @@ public class CalculatorModel extends CalculatorAbstractModel {
     }
 
     public boolean isOperator(String newText) {
-        return newText.equals("+") || newText.equals("-") || newText.equals("×") || newText.equals("÷") || newText.equals("√");
+        return newText.equals("+") || newText.equals("-") || newText.equals("×") || newText.equals("÷"); //|| newText.equals("√");
     }
     private static OperatorChoice Operators(String newText) {
         if (newText.matches(OperatorChoice.ADDITION.grabSign())) {
@@ -174,8 +190,9 @@ public class CalculatorModel extends CalculatorAbstractModel {
                 setResult(result.toString());
             } else {
                 // Handle division by zero error
+                result.append("Cannot divide by 0");
+                firePropertyChange(CalculatorController.NEW_DIGIT, null, result.toString());
                 state = CalculatorState.ERROR;
-                return;
             }
             Log.i(TAG, "result is " + result_one);
         } else if (currentChoice.equals(OperatorChoice.SQRT)) {
@@ -219,8 +236,11 @@ public class CalculatorModel extends CalculatorAbstractModel {
         result_one = new BigDecimal(result.toString());
         Log.i(TAG, "Result: "+result_one);
         firePropertyChange(CalculatorController.NEW_DIGIT, old_result, result_one);
-    }
 
+        if (state.equals(CalculatorState.ERROR)){
+
+        }
+    }
     public void setLhs(String newText) {
         BigDecimal old_lhs = this.lhs;
         lhs = new BigDecimal(newText);
@@ -228,7 +248,6 @@ public class CalculatorModel extends CalculatorAbstractModel {
         Log.i(TAG,"LHS: "+ lhs);
         Log.i(TAG, "Value change from "+old_lhs+ "to "+lhs);
     }
-
     public void setRhs(String newText) {
         BigDecimal old_rhs = this.rhs;
         rhs = new BigDecimal(newText);
@@ -236,7 +255,6 @@ public class CalculatorModel extends CalculatorAbstractModel {
         Log.i(TAG,"RHS: "+ rhs);
         Log.i(TAG, "Value change from "+old_rhs+ "to "+rhs);
     }
-
     public static BigDecimal getLhs() {
         return lhs;
     }
@@ -262,7 +280,6 @@ public class CalculatorModel extends CalculatorAbstractModel {
             rhs = rhs.multiply(percentValue);
             setRhs(rhs.toString());
         }
-        //state = CalculatorState.OP_SELECTED;
     }
     private void reset() {
         left.setLength(0);
