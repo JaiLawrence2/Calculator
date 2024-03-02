@@ -101,7 +101,8 @@ public class CalculatorModel extends CalculatorAbstractModel {
                     reset();
                     break;
                 }
-                else if (newText.equals(isOperator(newText))){
+                else if (isOperator(newText)){
+                    Operators(newText);
                     lhs = result_one;
                     state = CalculatorState.OP_SELECTED;
                     right.setLength(0);
