@@ -1,8 +1,10 @@
 package edu.jsu.mcis.cs408.calculator;
 
+import android.util.Half;
 import android.util.Log;
 
 import java.math.BigDecimal;
+import java.math.MathContext;
 import java.math.RoundingMode;
 
 public class CalculatorModel extends CalculatorAbstractModel {
@@ -22,7 +24,6 @@ public class CalculatorModel extends CalculatorAbstractModel {
         rhs = BigDecimal.ZERO;
         result_one = BigDecimal.ZERO;
     }
-
     public void setNewDigit(String newText) {
         CalculatorState newstate = null;
         switch (state) {
@@ -39,7 +40,6 @@ public class CalculatorModel extends CalculatorAbstractModel {
                         Operators(newText);
                         break;
                     }
-
                 }
                 else if (newText.equals("%")) {
                     PercentClick();
@@ -107,7 +107,6 @@ public class CalculatorModel extends CalculatorAbstractModel {
                     state = CalculatorState.OP_SELECTED;
                     right.setLength(0);
                     result.setLength(0);
-                    Log.i(TAG, "LHS is now equal to: "+lhs);
                     break;
                 }else if (newText.equals("√")) {
                     BigDecimal value = new BigDecimal(result.toString());
@@ -116,6 +115,14 @@ public class CalculatorModel extends CalculatorAbstractModel {
                         setRhs(result_one.toString());
                         break;
                     }
+                } else if(newText.equals("=")){
+                    BigDecimal old_rhs = this.rhs;
+                    state = CalculatorState.RESULT;
+                    rhs = old_rhs;
+                    lhs = result_one;
+                    result.setLength(0);
+                    calculate(lhs,currentChoice,rhs);
+                    break;
                 }
             case ERROR:
                 newstate = CalculatorState.CLEAR;
@@ -137,34 +144,28 @@ public class CalculatorModel extends CalculatorAbstractModel {
     }
 
     public boolean isOperator(String newText) {
-        return newText.equals("+") || newText.equals("-") || newText.equals("×") || newText.equals("÷"); //|| newText.equals("√");
+        return newText.equals("+") || newText.equals("-") || newText.equals("×") || newText.equals("÷");
     }
     private static OperatorChoice Operators(String newText) {
         if (newText.matches(OperatorChoice.ADDITION.grabSign())) {
             OperatorChoice newChoice = OperatorChoice.ADDITION;
             setOperatorChoice(newChoice);
-            Log.i(TAG, "Operator = " + newChoice.grabSign());
-            Log.i(TAG, "Operator = " + currentChoice);
         }
         else if (newText.matches(OperatorChoice.SUBTRACTION.grabSign())) {
             OperatorChoice newChoice = OperatorChoice.SUBTRACTION;
             setOperatorChoice(newChoice);
-            Log.i(TAG, "Operator = " + newChoice.grabSign());
         }
         else if (newText.matches(OperatorChoice.MULTIPLICATION.grabSign())) {
             OperatorChoice newChoice = OperatorChoice.MULTIPLICATION;
             setOperatorChoice(newChoice);
-            Log.i(TAG, "Operator = " + newChoice.grabSign());
         }
         else if (newText.matches(OperatorChoice.DIVISION.grabSign())) {
             OperatorChoice newChoice = OperatorChoice.DIVISION;
             setOperatorChoice(newChoice);
-            Log.i(TAG, "Operator = " + newChoice.grabSign());
         }
         else if (newText.matches(OperatorChoice.SQRT.grabSign())) {
             OperatorChoice newChoice = OperatorChoice.SQRT;
             setOperatorChoice(newChoice);
-            Log.i(TAG, "Operator = " + newChoice.grabSign());
         }
         else if (newText.matches(OperatorChoice.PERCENT.grabSign())){
             OperatorChoice newChoice = OperatorChoice.PERCENT;
@@ -180,22 +181,20 @@ public class CalculatorModel extends CalculatorAbstractModel {
         } else if (currentChoice.equals(OperatorChoice.SUBTRACTION)) {
             result.append(lhs.subtract(rhs));
             setResult(result.toString());
-            Log.i(TAG, "result is " + result_one);
         } else if (currentChoice.equals(OperatorChoice.MULTIPLICATION)) {
             result.append(lhs.multiply(rhs));
             setResult(result.toString());
-            Log.i(TAG, "result is " + result_one);
         } else if (currentChoice.equals(OperatorChoice.DIVISION)) {
             if (rhs.compareTo(BigDecimal.ZERO) != 0) {
-                result.append(lhs.divide(rhs));
+                MathContext mc = new MathContext(12, RoundingMode.HALF_UP);
+                result.append(lhs.divide(rhs, mc));
                 setResult(result.toString());
             } else {
                 // Handle division by zero error
+                state = CalculatorState.ERROR;
                 result.append("Cannot divide by 0");
                 firePropertyChange(CalculatorController.NEW_DIGIT, null, result.toString());
-                state = CalculatorState.ERROR;
             }
-            Log.i(TAG, "result is " + result_one);
         } else if (currentChoice.equals(OperatorChoice.SQRT)) {
             if (state.equals(CalculatorState.LHS)){
                 result.append(BigDecimal.valueOf(Math.sqrt(lhs.doubleValue())));
@@ -205,8 +204,6 @@ public class CalculatorModel extends CalculatorAbstractModel {
                 result.append(BigDecimal.valueOf(Math.sqrt(rhs.doubleValue())));
                 setRhs(result.toString());
             }
-            Log.i(TAG, "state: "+state);
-            Log.i(TAG, "result is: " + result_one);
         } else if (currentChoice.equals(OperatorChoice.PERCENT)) {
             BigDecimal operand;
             if (state == CalculatorState.LHS) {
@@ -227,34 +224,22 @@ public class CalculatorModel extends CalculatorAbstractModel {
                 BigDecimal new_value = old_value.negate();
                 setRhs(String.valueOf(new_value));
             }
-
         }
-
     }
-
     private void setResult(String result) {
         BigDecimal old_result = this.result_one;
         result_one = new BigDecimal(result.toString());
-        Log.i(TAG, "Result: "+result_one);
         firePropertyChange(CalculatorController.NEW_DIGIT, old_result, result_one);
-
-        if (state.equals(CalculatorState.ERROR)){
-
-        }
     }
     public void setLhs(String newText) {
         BigDecimal old_lhs = this.lhs;
         lhs = new BigDecimal(newText);
         firePropertyChange(CalculatorController.NEW_DIGIT,null,lhs);
-        Log.i(TAG,"LHS: "+ lhs);
-        Log.i(TAG, "Value change from "+old_lhs+ "to "+lhs);
     }
     public void setRhs(String newText) {
         BigDecimal old_rhs = this.rhs;
         rhs = new BigDecimal(newText);
         firePropertyChange(CalculatorController.NEW_DIGIT,null,rhs);
-        Log.i(TAG,"RHS: "+ rhs);
-        Log.i(TAG, "Value change from "+old_rhs+ "to "+rhs);
     }
     public static BigDecimal getLhs() {
         return lhs;
